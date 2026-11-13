@@ -1,0 +1,436 @@
+{
+  "id": "edusimplify-ai-flow",
+  "name": "EduSimplify AI — Course Content Simplification",
+  "description": "Simplifies academic content for learners at different proficiency levels using IBM Granite via WatsonX AI.",
+  "data": {
+    "nodes": [
+      {
+        "id": "ChatInput-1",
+        "type": "genericNode",
+        "position": { "x": 80, "y": 300 },
+        "data": {
+          "id": "ChatInput-1",
+          "type": "ChatInput",
+          "node": {
+            "template": {
+              "input_value": {
+                "type": "str",
+                "required": false,
+                "placeholder": "Paste academic content here…",
+                "list": false,
+                "show": true,
+                "multiline": true,
+                "value": "",
+                "display_name": "Academic Content",
+                "advanced": false,
+                "dynamic": false,
+                "info": "Paste the lecture notes or textbook content to simplify."
+              },
+              "sender": {
+                "type": "str",
+                "required": false,
+                "placeholder": "",
+                "list": false,
+                "show": false,
+                "multiline": false,
+                "value": "User",
+                "display_name": "Sender",
+                "advanced": true,
+                "dynamic": false,
+                "info": ""
+              },
+              "sender_name": {
+                "type": "str",
+                "required": false,
+                "placeholder": "",
+                "list": false,
+                "show": false,
+                "multiline": false,
+                "value": "User",
+                "display_name": "Sender Name",
+                "advanced": true,
+                "dynamic": false,
+                "info": ""
+              },
+              "session_id": {
+                "type": "str",
+                "required": false,
+                "placeholder": "",
+                "list": false,
+                "show": false,
+                "multiline": false,
+                "value": "",
+                "display_name": "Session ID",
+                "advanced": true,
+                "dynamic": false,
+                "info": ""
+              }
+            },
+            "description": "Accepts the raw academic content from the user.",
+            "display_name": "Academic Content Input",
+            "documentation": "",
+            "base_classes": ["Message"]
+          }
+        }
+      },
+      {
+        "id": "TextInput-Level",
+        "type": "genericNode",
+        "position": { "x": 80, "y": 600 },
+        "data": {
+          "id": "TextInput-Level",
+          "type": "TextInput",
+          "node": {
+            "template": {
+              "input_value": {
+                "type": "str",
+                "required": false,
+                "placeholder": "Beginner / Intermediate / Advanced / Expert",
+                "list": false,
+                "show": true,
+                "multiline": false,
+                "value": "Intermediate",
+                "display_name": "Proficiency Level",
+                "advanced": false,
+                "dynamic": false,
+                "info": "One of: Beginner, Intermediate, Advanced, Expert"
+              }
+            },
+            "description": "Learner proficiency level selector.",
+            "display_name": "Proficiency Level",
+            "documentation": "",
+            "base_classes": ["Message", "Text"]
+          }
+        }
+      },
+      {
+        "id": "TextInput-Topic",
+        "type": "genericNode",
+        "position": { "x": 80, "y": 800 },
+        "data": {
+          "id": "TextInput-Topic",
+          "type": "TextInput",
+          "node": {
+            "template": {
+              "input_value": {
+                "type": "str",
+                "required": false,
+                "placeholder": "e.g. Quantum Mechanics, DNA, Neural Networks",
+                "list": false,
+                "show": true,
+                "multiline": false,
+                "value": "",
+                "display_name": "Topic (optional)",
+                "advanced": false,
+                "dynamic": false,
+                "info": "Short label for the subject being simplified."
+              }
+            },
+            "description": "Optional topic label for better context.",
+            "display_name": "Topic Input",
+            "documentation": "",
+            "base_classes": ["Message", "Text"]
+          }
+        }
+      },
+      {
+        "id": "Prompt-1",
+        "type": "genericNode",
+        "position": { "x": 500, "y": 420 },
+        "data": {
+          "id": "Prompt-1",
+          "type": "Prompt",
+          "node": {
+            "template": {
+              "template": {
+                "type": "prompt",
+                "required": true,
+                "placeholder": "",
+                "list": false,
+                "show": true,
+                "multiline": true,
+                "value": "You are EduSimplify, an expert educational AI tutor powered by IBM Granite.\nYour job is to rewrite academic content so it is perfectly suited to the learner's proficiency level.\n\nAlways:\n- Preserve factual accuracy.\n- Adjust vocabulary, depth, and examples to match the level.\n- Use numbered key points for clarity.\n- End with a 'Key Takeaway' section (1-2 sentences).\n\n### Learner Profile\nProficiency Level: {level}\n\n### Original Academic Content\nTopic: {topic}\n\n{content}\n\n### Simplified Explanation (for a {level} learner)\n",
+                "display_name": "Template",
+                "advanced": false,
+                "dynamic": false,
+                "info": "The prompt template with {content}, {level}, and {topic} variables."
+              },
+              "content": {
+                "type": "str",
+                "required": false,
+                "placeholder": "",
+                "list": false,
+                "show": false,
+                "multiline": true,
+                "value": "",
+                "display_name": "content",
+                "advanced": false,
+                "dynamic": true,
+                "info": "Connected from Academic Content Input"
+              },
+              "level": {
+                "type": "str",
+                "required": false,
+                "placeholder": "",
+                "list": false,
+                "show": false,
+                "multiline": false,
+                "value": "Intermediate",
+                "display_name": "level",
+                "advanced": false,
+                "dynamic": true,
+                "info": "Connected from Proficiency Level"
+              },
+              "topic": {
+                "type": "str",
+                "required": false,
+                "placeholder": "",
+                "list": false,
+                "show": false,
+                "multiline": false,
+                "value": "",
+                "display_name": "topic",
+                "advanced": false,
+                "dynamic": true,
+                "info": "Connected from Topic Input"
+              }
+            },
+            "description": "Builds the proficiency-aware prompt for IBM Granite.",
+            "display_name": "EduSimplify Prompt",
+            "documentation": "",
+            "base_classes": ["Prompt", "str"]
+          }
+        }
+      },
+      {
+        "id": "WatsonxAIModel-1",
+        "type": "genericNode",
+        "position": { "x": 950, "y": 420 },
+        "data": {
+          "id": "WatsonxAIModel-1",
+          "type": "WatsonxAIModel",
+          "node": {
+            "template": {
+              "model_id": {
+                "type": "str",
+                "required": true,
+                "placeholder": "",
+                "list": false,
+                "show": true,
+                "multiline": false,
+                "value": "ibm/granite-4-h-small",
+                "display_name": "Model ID",
+                "advanced": false,
+                "dynamic": false,
+                "info": "IBM Granite model available on your WatsonX instance."
+              },
+              "url": {
+                "type": "str",
+                "required": true,
+                "placeholder": "",
+                "list": false,
+                "show": true,
+                "multiline": false,
+                "value": "https://us-south.ml.cloud.ibm.com",
+                "display_name": "WatsonX URL",
+                "advanced": false,
+                "dynamic": false,
+                "info": "IBM WatsonX AI REST API base URL."
+              },
+              "apikey": {
+                "type": "str",
+                "required": true,
+                "placeholder": "",
+                "list": false,
+                "show": true,
+                "multiline": false,
+                "value": "",
+                "password": true,
+                "display_name": "IBM Cloud API Key",
+                "advanced": false,
+                "dynamic": false,
+                "info": "Your IBM Cloud API key from WATSONX_API_KEY in .env"
+              },
+              "project_id": {
+                "type": "str",
+                "required": true,
+                "placeholder": "",
+                "list": false,
+                "show": true,
+                "multiline": false,
+                "value": "",
+                "display_name": "WatsonX Project ID",
+                "advanced": false,
+                "dynamic": false,
+                "info": "Your WatsonX project ID from WATSONX_PROJECT_ID in .env"
+              },
+              "max_new_tokens": {
+                "type": "int",
+                "required": false,
+                "placeholder": "",
+                "list": false,
+                "show": true,
+                "multiline": false,
+                "value": 1024,
+                "display_name": "Max New Tokens",
+                "advanced": false,
+                "dynamic": false,
+                "info": ""
+              },
+              "temperature": {
+                "type": "float",
+                "required": false,
+                "placeholder": "",
+                "list": false,
+                "show": true,
+                "multiline": false,
+                "value": 0.4,
+                "display_name": "Temperature",
+                "advanced": false,
+                "dynamic": false,
+                "info": ""
+              },
+              "top_p": {
+                "type": "float",
+                "required": false,
+                "placeholder": "",
+                "list": false,
+                "show": true,
+                "multiline": false,
+                "value": 0.9,
+                "display_name": "Top P",
+                "advanced": false,
+                "dynamic": false,
+                "info": ""
+              },
+              "input_value": {
+                "type": "str",
+                "required": false,
+                "placeholder": "",
+                "list": false,
+                "show": false,
+                "multiline": true,
+                "value": "",
+                "display_name": "Input",
+                "advanced": false,
+                "dynamic": true,
+                "info": "Connected from Prompt node"
+              }
+            },
+            "description": "IBM Granite LLM via WatsonX AI — generates the simplified explanation.",
+            "display_name": "IBM Granite (WatsonX AI)",
+            "documentation": "",
+            "base_classes": ["LanguageModel", "BaseLanguageModel"]
+          }
+        }
+      },
+      {
+        "id": "ChatOutput-1",
+        "type": "genericNode",
+        "position": { "x": 1380, "y": 420 },
+        "data": {
+          "id": "ChatOutput-1",
+          "type": "ChatOutput",
+          "node": {
+            "template": {
+              "input_value": {
+                "type": "str",
+                "required": false,
+                "placeholder": "",
+                "list": false,
+                "show": false,
+                "multiline": true,
+                "value": "",
+                "display_name": "Simplified Explanation",
+                "advanced": false,
+                "dynamic": true,
+                "info": "The AI-generated simplified output."
+              },
+              "sender": {
+                "type": "str",
+                "required": false,
+                "placeholder": "",
+                "list": false,
+                "show": false,
+                "multiline": false,
+                "value": "EduSimplify AI",
+                "display_name": "Sender",
+                "advanced": true,
+                "dynamic": false,
+                "info": ""
+              },
+              "sender_name": {
+                "type": "str",
+                "required": false,
+                "placeholder": "",
+                "list": false,
+                "show": false,
+                "multiline": false,
+                "value": "EduSimplify AI",
+                "display_name": "Sender Name",
+                "advanced": true,
+                "dynamic": false,
+                "info": ""
+              },
+              "session_id": {
+                "type": "str",
+                "required": false,
+                "placeholder": "",
+                "list": false,
+                "show": false,
+                "multiline": false,
+                "value": "",
+                "display_name": "Session ID",
+                "advanced": true,
+                "dynamic": false,
+                "info": ""
+              }
+            },
+            "description": "Displays the simplified explanation to the learner.",
+            "display_name": "Simplified Output",
+            "documentation": "",
+            "base_classes": ["Message"]
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge-ChatInput-1-Prompt-1-content",
+        "source": "ChatInput-1",
+        "target": "Prompt-1",
+        "sourceHandle": "ChatInput-1-ChatInput-Message",
+        "targetHandle": "Prompt-1-Prompt-content"
+      },
+      {
+        "id": "edge-TextInput-Level-Prompt-1-level",
+        "source": "TextInput-Level",
+        "target": "Prompt-1",
+        "sourceHandle": "TextInput-Level-TextInput-Text",
+        "targetHandle": "Prompt-1-Prompt-level"
+      },
+      {
+        "id": "edge-TextInput-Topic-Prompt-1-topic",
+        "source": "TextInput-Topic",
+        "target": "Prompt-1",
+        "sourceHandle": "TextInput-Topic-TextInput-Text",
+        "targetHandle": "Prompt-1-Prompt-topic"
+      },
+      {
+        "id": "edge-Prompt-1-WatsonxAIModel-1",
+        "source": "Prompt-1",
+        "target": "WatsonxAIModel-1",
+        "sourceHandle": "Prompt-1-Prompt-Prompt",
+        "targetHandle": "WatsonxAIModel-1-WatsonxAIModel-input_value"
+      },
+      {
+        "id": "edge-WatsonxAIModel-1-ChatOutput-1",
+        "source": "WatsonxAIModel-1",
+        "target": "ChatOutput-1",
+        "sourceHandle": "WatsonxAIModel-1-WatsonxAIModel-LanguageModel",
+        "targetHandle": "ChatOutput-1-ChatOutput-input_value"
+      }
+    ],
+    "viewport": { "x": 0, "y": 0, "zoom": 0.85 }
+  }
+}
