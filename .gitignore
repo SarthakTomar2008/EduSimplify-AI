@@ -21,3 +21,6 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+# Langflow Python 3.12 venv
+.venv-langflow/

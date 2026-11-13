@@ -104,9 +104,14 @@ if __name__ == "__main__":
     env.setdefault("LANGFLOW_SUPERUSER_PASSWORD",  os.getenv("LANGFLOW_SUPERUSER_PASSWORD", "admin123"))
     env.setdefault("LANGFLOW_AUTO_LOGIN",          os.getenv("LANGFLOW_AUTO_LOGIN", "false"))
 
-    langflow_exe = Path(sys.executable).parent / "Scripts" / "langflow.exe"
-    if not langflow_exe.exists():
-        langflow_exe = "langflow"  # fallback to PATH
+    # Prefer the Python-3.12 venv (compatible with Langflow)
+    venv_langflow = Path(__file__).parent / ".venv-langflow" / "Scripts" / "langflow.exe"
+    if venv_langflow.exists():
+        langflow_exe = venv_langflow
+    else:
+        langflow_exe = Path(sys.executable).parent / "Scripts" / "langflow.exe"
+        if not langflow_exe.exists():
+            langflow_exe = "langflow"  # fallback to PATH
 
     proc = subprocess.Popen(
         [str(langflow_exe), "run", "--port", str(LANGFLOW_PORT), "--no-open-browser"],
