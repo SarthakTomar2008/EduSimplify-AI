@@ -89,7 +89,7 @@ def _get_model() -> ModelInference:
     }
 
     model = ModelInference(
-        model_id="ibm/granite-13b-instruct-v2",
+        model_id="ibm/granite-4-h-small",
         params=params,
         credentials=credentials,
         project_id=project_id,
